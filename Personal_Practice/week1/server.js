@@ -52,7 +52,9 @@ function serveStaticFiles(req, res, next)
 // routing 
 app.get('/', handleRootRequest);
 app.get('/hello', handleHelloRequest);
-app.get('/web', serveStaticFiles);
+
+// NEED TO USE app.use()
+app.use('/web', serveStaticFiles);
 
 
 // start server
