@@ -1,0 +1,284 @@
+CMPT 353 – Docker CLI Basics
+Directory: 01_basics_cli
+Purpose: Images, Containers, Lifecycle, CLI commands
+
+
+
+
+
+Image vs Container (EXAM CORE)
+Image:
+-> Read-only template
+-> Built or pulled
+->Reusable
+-> Heavy (disk space)
+
+Container:
+-> Running instance of an image
+-> Writable layer on top of image
+-> Disposable
+-> Created via docker run
+
+docker run = create + start container
+
+What's the difference between docker pull and docker build?
+answer:
+Docker pull downloads an existing image;
+Docker build creates a new image from a Dockerfile.
+
+
+
+> docker pull node:latest
+
+
+> docker images
+
+What this does
+Lists all local images
+Images = blueprints/templates
+You should see
+Image exists locally
+No container is running yet
+
+
+> docker images
+
+-> Lists locally available Docker images
+-> Images are immutable templates used to create containers
+
+
+> docker run node:latest
+> docker run <image>
+
+docker		Docker CLI
+run		Create and start a container
+node:latest	Image name + tag
+
+
+-> Creates + starts a container from an image
+-> If image not found locally, Docker pulls it automatically
+
+
+
+> docker ps
+
+-> Shows running containers only
+
+> docker ps -a
+
+-> Shows all containers (running + stopped)
+
+
+
+> docker run -it node:latest
+> docker run -it <image>
+> docker run -it node:latest
+Welcome to Node.js v25.2.1.
+Type ".help" for more information.
+> .exit
+
+Flag	Meaning
+-i	Interactive (keep STDIN open)
+-t	Allocate a terminal
+-it	Let me interact with the container
+
+Node's REPL.
+This is not Windows.
+This is not PowerShell.
+This is a Linux container environment.
+
+
+-> Starts container in interactive terminal mode
+-> Used for exploration and debugging
+
+> .exit
+
+
+
+> docker run --rm -it node:latest bash
+> docker run --rm -it node:latest bash
+root@e7c33f447daa:/#
+> docker run --rm -it node:latest bash
+root@e7c33f447daa:/# pwd
+/
+root@e7c33f447daa:/# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@e7c33f447daa:/# exit
+exit
+
+
+Part		Meaning
+--rm		Delete container after exit
+-it		Interactive terminal
+node:latest	Base image
+bash		Override default command
+
+You are now inside:
+A Linux filesystem
+Completely isolated from your host
+Temporary (because of --rm)
+
+--rm
+-> Automatically removes container after it stops
+-> Prevents accumulation of stopped containers
+
+
+Inside the container:
+
+pwd
+ls
+exit
+
+> docker ps -a
+
+
+
+
+
+IN THE END: 
+
+> docker ps -a
+
+CONTAINER ID   IMAGE                             COMMAND                  CREATED          STATUS                      PORTS     NAMES
+8c10fc2da193   node:latest                       "docker-entrypoint.s…"   17 minutes ago   Exited (0) 16 minutes ago             magical_euclid
+eea73cf8c957   node:latest                       "docker-entrypoint.s…"   20 minutes ago   Exited (0) 20 minutes ago             ecstatic_carver
+4f8a3dac171d   docker/welcome-to-docker:latest   "/docker-entrypoint.…"   26 hours ago     Exited (0) 26 hours ago               welcome-to-docker
+
+> docker container prune
+WARNING! This will remove all stopped containers.
+Are you sure you want to continue? [y/N] y
+Deleted Containers:
+8c10fc2da193eab0bd274d894a83836aa28898eced0d32a413b032e0a4622265
+eea73cf8c957b1351e0ec443b8806cf6ee03896d175225095f1cc5b05d3714a8
+4f8a3dac171d36837f442552862dfd42bae2bfa50e08b2244aac3c6b4af09f7d
+
+Total reclaimed space: 94.21kB
+> docker ps -a
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+
+
+
+
+
+
+
+
+
+
+
+
+          +-----------------------------+
+          |         Docker Image        |
+          |-----------------------------|
+          | - Blueprint / recipe        |
+          | - Contains code + deps      |
+          | - Read‑only                 |
+          +-----------------------------+
+                       |
+                       |  "docker run"
+                       v
+          +-----------------------------+
+          |        Docker Container     |
+          |-----------------------------|
+          | - Running instance          |
+          | - Has its own filesystem    |
+          | - Can change state          |
+          +-----------------------------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                 +---------------------------+
+                 |     docker-compose.yml    |
+                 |---------------------------|
+                 | - Defines multiple        |
+                 |   services (containers)   |
+                 | - Ports, volumes, env     |
+                 | - Networks                |
+                 +---------------------------+
+                               |
+                               | "docker compose up"
+                               v
+   +------------------+     +------------------+     +------------------+
+   |   Service 1      |     |   Service 2      |     |   Service 3      |
+   | (e.g., backend)  |     | (e.g., frontend) |     | (e.g., database) |
+   +------------------+     +------------------+     +------------------+
+            |                        |                        |
+            |                        |                        |
+            +----------- Network created by Compose ----------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   +------------------+
+   |   Dockerfile     |
+   +------------------+
+            |
+            | docker build
+            v
+   +------------------+
+   |   Docker Image   |
+   +------------------+
+            |
+            | docker run
+            v
+   +------------------+
+   | Docker Container |
+   +------------------+
+
+   +----------------------------------------------+
+   |            docker-compose.yml                |
+   +----------------------------------------------+
+            |
+            | docker compose up
+            v
+   +------------------+   +------------------+
+   | Container A      |   | Container B      |
+   | (from Image A)   |   | (from Image B)   |
+   +------------------+   +------------------+
+
+
+
+
+
+
+
+
+
++----------------------+       +----------------------+
+|   Virtual Machine    |       |       Container      |
++----------------------+       +----------------------+
+| Guest OS (Linux/Win) |       | Shares host OS       |
+| Heavy, slow startup  |       | Lightweight, fast    |
+| Uses lots of RAM     |       | Uses less RAM        |
++----------------------+       +----------------------+
+
