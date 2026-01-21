@@ -1,0 +1,662 @@
+Dockerfile Basics
+
+
+Image = minimal locked box
+Container = locked box + explicitly granted powers
+
+
+
+
+Those powers are:
+
+Ports
+File system (volumes)
+Interactive terminal
+
+_______________________
+
+> notepad Dockerfile
+_______________________
+
+
+
+FROM
+
+Base operating system + Node installed
+This is not your app
+This is just the environment
+
+-> Base image
+-> Required first instruction
+-> “FROM defines the base image used to build the container.”
+
+
+
+EXPOSE 8080
+
+This does NOT open the port.
+This line only:
+Documents that the container expects traffic on port 8080
+Makes port 8080 eligible to be opened later
+Think of it as:
+This container may talk on 8080, if allowed at runtime.
+This directly matches:
+Docker containers are locked down.
+
+
+CMD
+-> Default container startup command
+-> Can be overridden at runtime
+
+Default command when container starts
+Starts a Linux shell
+Keeps container alive
+Lets you manually configure things
+
+Why not node server.js yet?
+Because the professor wants you to:
+Enter the container
+Install packages
+Create files manually
+Learn the filesystem first
+
+--------
+Dockerfile naming rule:
+- Must be named exactly "Dockerfile"
+- No file extension
+- docker build looks for it by default
+------------------------------
+
+WORKDIR
+-> Sets working directory inside image
+-> Avoids hardcoded paths
+
+
+
+
+
+______________________________________
+
+> docker build -t lam/node .
+______________________________________
+
+docker build
+-> Builds image from Dockerfile
+
+Part		Meaning
+docker build	Build an image
+-t ralph/node	Name + tag
+.		Use current directory
+
+
+
+
+ docker build -t lam/node .
+[+] Building 0.9s (5/5) FINISHED                                                                                                     docker:desktop-linux
+ => [internal] load build definition from Dockerfile                                                                                                 0.0s
+ => => transferring dockerfile: 87B                                                                                                                  0.0s
+ => [internal] load metadata for docker.io/library/node:latest                                                                                       0.1s
+ => [internal] load .dockerignore                                                                                                                    0.0s
+ => => transferring context: 2B                                                                                                                      0.0s
+ => [1/1] FROM docker.io/library/node:latest@sha256:6d362f0df70431417ef79c30e47c0515ea9066d8be8011e859c6c3575514a027                                 0.3s
+ => => resolve docker.io/library/node:latest@sha256:6d362f0df70431417ef79c30e47c0515ea9066d8be8011e859c6c3575514a027                                 0.0s
+ => exporting to image                                                                                                                               0.3s
+ => => exporting layers                                                                                                                              0.0s
+ => => exporting manifest sha256:62c7ede83298adcbfd1be97c25c6590dcf99d547311fdd58eb0ba7d63a7a8e55                                                    0.0s
+ => => exporting config sha256:0be0fc87eae9a6f5130e29eb6acfca22aa316eafd40a2ab0e63c4b2cec491a17                                                      0.0s
+ => => exporting attestation manifest sha256:4c37f926e938cbf36a0ff8d0f284461047c1134599ed26ec268589e412aa317b                                        0.0s
+ => => exporting manifest list sha256:58a46da8c6f22b4589ed8d60ae836121d31679e56136a161d44a9b9fe8ed7073                                               0.0s
+ => => naming to docker.io/lam/node:latest                                                                                                           0.0s
+ => => unpacking to docker.io/lam/node:latest                                                                                                        0.0s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/u5v2xyq6mwmfh7gl948dei6q5
+
+
+
+
+
+
+
+
+
+______________________________________
+
+> docker images
+______________________________________
+
+> docker images
+                                                                                                                                      i Info →   U  In Use
+IMAGE                                                                                    ID             DISK USAGE   CONTENT SIZE   EXTRA
+docker/welcome-to-docker:latest                                                          c4d56c24da4f       22.2MB         6.03MB
+lam/node:latest                                                                          58a46da8c6f2       1.62GB          406MB
+mcp/playwright@sha256:53da89d1da3dfbb61c10f707c1713cfee1f870f7fba5334e126c6c765e37db56   53da89d1da3d        1.4GB          397MB
+node:latest                                                                              6d362f0df704       1.64GB          422MB
+
+
+docker build creates a custom image from a Dockerfile
+
+
+
+
+
+
+
+
+
+
+
+______________________________________
+
+> docker run -it lam/node
+______________________________________
+
+
+root@b155c76ce48e:/# pwd
+/
+root@b155c76ce48e:/# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@b155c76ce48e:/# exit
+
+
+-> Runs container from image
+
+What happens
+Container starts
+You enter into bash environment -> /bin/bash
+Pure Linux filesystem
+
+BUT
+No app code
+No host files
+No ports open
+No files shared
+Fully isolated
+
+Dockerfile vs docker run
+
+Dockerfile:
+- Defines image
+- Static configuration
+- No permissions granted
+- A Dockerfile alone does not grant access to ports or host files.
+
+
+docker run:
+- Creates container
+- Grants runtime permissions
+- Controls ports, volumes, lifecycle
+
+
+
+
+
+
+--------
+Your professor says:
+You also have to grant capabilities to the runtime
+These are NOT Dockerfile features.
+These are docker run features.
+------------------
+
+
+
+Capability 1 — Ports
+______________________________________
+
+> -p HOST:CONTAINER     <--SYNTAX
+> -p 80:8080		<--EXAMPLE
+______________________________________
+Meaning:
+Host port 80
+Forward to container port 8080
+EXPOSE makes the port available;
+-p actually opens it.
+
+
+
+Capability 2 — File system (Volumes)
+_______________________________________________________
+
+> -v HOST_PATH:CONATAINER_PATH
+> -v /Users/ralph/node/nodejs:/usr/src/app/ 
+________________________________________________________
+This is how:
+You edit files on Windows
+Container sees them instantly
+
+
+
+
+
+Capability 3 — Container lifecycle
+______________________________________
+
+> --rm         <-- auto delete container
+> --name a1    <-- human-readable name
+______________________________________
+
+
+
+Professor’s command:
+_________________________________________________________________________________________________
+
+docker run -p 80:8080 -v /Users/ralph/node/nodejs:/usr/src/app --rm --name a1 -it ralph/node
+_________________________________________________________________________________________________
+
+
+
+MY version [Windows version]
+_________________________________________________________________________________________________
+
+docker run -p 8080:8080 -v ${PWD}:/usr/src/app --rm --name node1 -it lam/node
+_________________________________________________________________________________________________
+
+
+Part			Meaning
+-p 8080:8080		Allow browser → container
+-v ${PWD}:/usr/src/app	Share your folder
+--rm			Clean exit
+--name node1		Named container
+-it			Interactive shell
+
+
+----------------
+Your professor wants you to:
+Enter container                <-- Done
+Configure environment manually <--Done
+
+Install packages    <--- Done
+Create files    <-- Done
+
+
+This teaches:
+Containers are not magic
+They are Linux environments
+You must explicitly enable everything
+-----------------
+
+
+
+
+
+
+______________________________________
+
+> docker images
+______________________________________
+
+                                                                                                                                      i Info →   U  In Use
+IMAGE                                                                                    ID             DISK USAGE   CONTENT SIZE   EXTRA
+docker/welcome-to-docker:latest                                                          c4d56c24da4f       22.2MB         6.03MB
+lam/node:latest                                                                          58a46da8c6f2       1.62GB          406MB    U
+mcp/playwright@sha256:53da89d1da3dfbb61c10f707c1713cfee1f870f7fba5334e126c6c765e37db56   53da89d1da3d        1.4GB          397MB
+node:latest                                                                              6d362f0df704       1.64GB          422MB
+
+
+
+
+
+______________________________________
+
+> docker run -it lam/node
+______________________________________
+
+root@90e9ee729f0e:/# pwd
+/
+root@90e9ee729f0e:/# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@90e9ee729f0e:/# exit
+exit
+
+-> No ports
+-> No files
+-> Full isolation
+
+This proves:
+Containers are locked down unless explicitly granted access.
+
+
+
+
+
+
+
+______________________________________
+
+> docker run -p 8080:8080 -it lam/node
+______________________________________
+
+
+root@1bf39860a64d:/# pwd
+/
+root@1bf39860a64d:/# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@1bf39860a64d:/# exit
+exit
+
+-> Port mapping exists
+-> Still nothing listening
+
+This proves:
+Opening a port does not start a service.
+
+
+
+
+Filesystem access via volumes
+Volumes allow the container to access and modify host files at runtime.
+
+|----------------------------------|
+|Dockerfile defines the image	   |
+|docker run defines permissions	   |
+|----------------------------------|
+
+
+
+
+
+
+
+
+_________________________________________________________________________________________________
+
+> docker run -p 8080:8080 -v ${PWD}:/usr/src/app --rm --name node1 -it lam/node
+_________________________________________________________________________________________________
+
+Now that:
+Ports are open
+Files are shared
+
+We will:
+Install Express
+Create server.js
+Run a real Node server
+Hit it from the browser
+
+
+
+
+---------------------------------------------------
+root@b23b6881063b:/# pwd
+---------------------------------------------------
+/
+
+---------------------------------------------------
+root@b23b6881063b:/# ls
+---------------------------------------------------
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+
+
+---------------------------------------------------
+root@b23b6881063b:/# cd /usr/src/app
+---------------------------------------------------
+
+---------------------------------------------------
+root@b23b6881063b:/usr/src/app# ls
+---------------------------------------------------
+DockerBasics.txt  Dockerfile
+
+
+
+
+STEP Create config file of the server
+---------------------------------------------------
+root@4497100b261f:/usr/src/app# npm init
+---------------------------------------------------
+
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+See 'npm help init' for definitive documentation on these fields
+and exactly what they do.
+Use 'npm install <pkg>' afterwards to install a package and
+save it as a dependency in the package.json file.
+Press ^C at any time to quit.
+package name: (app)
+version: (1.0.0)
+description:
+entry point: (index.js)
+test command:
+git repository:
+keywords:
+author:
+license: (ISC)
+type: (commonjs)
+About to write to /usr/src/app/package.json:
+
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
+Is this OK? (yes) yes
+npm notice
+npm notice New minor version of npm available! 11.6.2 -> 11.7.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.7.0
+npm notice To update run: npm install -g npm@11.7.0
+npm notice
+
+
+
+STEP: Install Express
+---------------------------------------------------
+root@4497100b261f:/usr/src/app# npm add express
+---------------------------------------------------
+
+added 65 packages, and audited 66 packages in 4s
+22 packages are looking for funding
+  run 'npm fund' for details
+found 0 vulnerabilities
+
+
+
+
+
+
+---------------------------------------------------
+root@4497100b261f:/usr/src/app# ls
+---------------------------------------------------
+DockerBasics.txt  Dockerfile  node_modules  package-lock.json  package.json
+
+-----------------------------------------------------|
+This creates:					     |
+node_modules/					     |
+package-lock.json				     |
+All of this is on your host now  		     |
+-----------------------------------------------------|
+
+
+
+
+STEP: install text editor
+---------------------------------------------------
+root@4497100b261f:/usr/src/app# apt-get update
+---------------------------------------------------
+
+Get:1 http://deb.debian.org/debian bookworm InRelease [151 kB]
+Get:2 http://deb.debian.org/debian bookworm-updates InRelease [55.4 kB]
+Get:3 http://deb.debian.org/debian-security bookworm-security InRelease [48.0 kB]
+Get:4 http://deb.debian.org/debian bookworm/main amd64 Packages [8792 kB]
+Get:5 http://deb.debian.org/debian bookworm-updates/main amd64 Packages [6924 B]
+Get:6 http://deb.debian.org/debian-security bookworm-security/main amd64 Packages [290 kB]
+Fetched 9343 kB in 4s (2372 kB/s)
+Reading package lists... Done
+
+
+
+
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# apt-get install nano
+-------------------------------------------------------------
+
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+Suggested packages:
+  hunspell
+The following NEW packages will be installed:
+  nano
+0 upgraded, 1 newly installed, 0 to remove and 53 not upgraded.
+Need to get 690 kB of archives.
+After this operation, 2871 kB of additional disk space will be used.
+Get:1 http://deb.debian.org/debian bookworm/main amd64 nano amd64 7.2-1+deb12u1 [690 kB]
+Fetched 690 kB in 1s (1136 kB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+Selecting previously unselected package nano.
+(Reading database ... 23257 files and directories currently installed.)
+Preparing to unpack .../nano_7.2-1+deb12u1_amd64.deb ...
+Unpacking nano (7.2-1+deb12u1) ...
+Setting up nano (7.2-1+deb12u1) ...
+update-alternatives: using /bin/nano to provide /usr/bin/editor (editor) in auto mode
+update-alternatives: using /bin/nano to provide /usr/bin/pico (pico) in auto mode
+
+
+
+
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# nano --version
+-------------------------------------------------------------
+
+ GNU nano, version 7.2
+ (C) 2023 the Free Software Foundation and various contributors
+ Compiled options: --disable-libmagic --enable-utf8
+
+
+-----------------------------------------------------|
+Install text editor (inside container)		     |
+-----------------------------------------------------|
+
+
+
+
+
+
+
+STEP: Create server.js
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# nano server.js
+-------------------------------------------------------------
+
+Save & exit:
+Ctrl + O
+Enter
+Ctrl + X
+
+
+
+
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# ls
+-------------------------------------------------------------
+
+DockerBasics.txt  Dockerfile  node_modules  package-lock.json  package.json  server.js
+
+
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# cat server.js
+-------------------------------------------------------------
+
+'use strict';
+
+
+const express = require('express');
+const app = express();
+
+
+app.get('/', (req, resp) => {
+  console.log(req.originalUrl);
+  resp.send('hello world');
+});
+
+app.get('/hello', (req, resp) => {
+  console.log(req.originalUrl);
+  resp.send('hello');
+});
+
+app.use('/web', express.static('pages'));
+
+app.listen(8080, () => {
+  console.log('Server listening on port 8080');
+});
+
+
+
+STEP run the server
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# node server.js
+-------------------------------------------------------------
+Server listening on port 8080
+/
+/hello
+^C
+root@4497100b261f:/usr/src/app#
+
+
+Browser → Host → Docker → Node → Express
+
+
+
+LINK: 		http://localhost:8080
+Expected: 	hello world
+LINK: 		http://localhost:8080/hello
+Expected: 	hello
+
+
+
+Back in container (new terminal or stop server with CTRL+C)
+
+root@4497100b261f:/usr/src/app#
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# ls
+-------------------------------------------------------------
+DockerBasics.txt  Dockerfile  node_modules  package-lock.json  package.json  server.js
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# mkdir pages
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# ls
+-------------------------------------------------------------
+DockerBasics.txt  Dockerfile  node_modules  package-lock.json  package.json  pages  server.js
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# cd pages
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app/pages# ls
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app/pages# nano lam.txt
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app/pages# ls
+-------------------------------------------------------------
+lam.txt
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app/pages# cd ..
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# ls
+-------------------------------------------------------------
+DockerBasics.txt  Dockerfile  node_modules  package-lock.json  package.json  pages  server.js
+-------------------------------------------------------------
+root@4497100b261f:/usr/src/app# node server.js
+-------------------------------------------------------------
+LINK: 		http://localhost:8080/web/lam.txt
+Server listening on port 8080
+^C
+root@4497100b261f:/usr/src/app#
+
+Stop server: Ctrl + C
+
+
+Automation comes later — the lecture is building intuition first.
+That comes after I fully understand runtime permissions.
+
+pages/ → static files → kill server → container lifecycle → compose.
+
+Image ≠ App
+Container ≠ VM
+Dockerfile ≠ Permissions
+docker run = security gate
+
+Exit container: exit
