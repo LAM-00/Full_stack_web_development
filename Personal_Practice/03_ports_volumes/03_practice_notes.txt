@@ -1,0 +1,348 @@
+VS Code is the industry-correct choice
+Files are created on the HOST, not inside the container.
+
+
+
+
+
+_______________________
+
+> notepad Dockerfile
+_______________________
+
+> cat .\Dockerfile
+FROM node:latest
+
+# Create app directory inside container
+WORKDIR /app
+
+# Copy dependency definitions first
+COPY package*.json ./
+
+# Install dependencies inside the image
+RUN npm install
+
+# Copy application code
+COPY server.js .
+
+# Document container port
+EXPOSE 3002
+
+# Start with shell (lecture choice)
+CMD ["node", "server.js"]    <------Docker does this internally > container start > node server.js
+
+_______________________
+
+> mv Dockerfile.txt Dockerfile
+_______________________
+
+
+
+
+
+Why this Dockerfile is shaped this way
+WORKDIR /app -> predictable filesystem
+COPY package*.json first → Docker layer caching
+RUN npm install -> dependencies baked into image
+CMD → container starts automatically (no bash nonsense)
+
+
+
+
+
+
+In VS Code, 
+package.json
+
+
+{
+  "name": "ports-volumes-demo",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
+
+
+
+______________________________________
+
+> docker build -t lam/ports-demo .
+______________________________________
+
+Freezes Node + Express into the image
+Eliminates reinstall-on-every-run madness
+Is why Docker exists
+
+[+] Building 7.2s (10/10) FINISHED                    docker:desktop-linux
+ => [internal] load build definition from Dockerfile                  0.1s
+ => => transferring dockerfile: 389B                                  0.0s
+ => [internal] load metadata for docker.io/library/node:latest        0.1s
+ => [internal] load .dockerignore                                     0.0s
+ => => transferring context: 2B                                       0.0s
+ => CACHED [1/5] FROM docker.io/library/node:latest@sha256:6d362f0df  0.1s
+ => => resolve docker.io/library/node:latest@sha256:6d362f0df7043141  0.0s
+ => [internal] load build context                                     0.1s
+ => => transferring context: 753B                                     0.0s
+ => [2/5] WORKDIR /app                                                0.1s
+ => [3/5] COPY package*.json ./                                       0.1s
+ => [4/5] RUN npm install                                             4.7s
+ => [5/5] COPY server.js .                                            0.1s
+ => exporting to image                                                1.7s
+ => => exporting layers                                               0.7s
+ => => exporting manifest sha256:36058d1ae5112c869ccdab13862f41e1e9a  0.0s
+ => => exporting config sha256:ece58d3a600785dd14f94622a4afab932bd6d  0.0s
+ => => exporting attestation manifest sha256:424317536cf5ca72407a180  0.0s
+ => => exporting manifest list sha256:f980af9a5eb7b8a398a1af9e3e57df  0.0s
+ => => naming to docker.io/lam/ports-demo:latest                      0.0s
+ => => unpacking to docker.io/lam/ports-demo:latest                   0.8s
+
+View build details: docker-desktop://dashboard/build/desktop-linux/desktop-linux/kmce03tymgvq6w7a220capxfu
+
+
+npm install done at build time is still there
+
+
+
+
+_________________________________________________________________________________________________
+
+docker run -p 3002:3002 --rm lam/ports-demo
+_________________________________________________________________________________________________
+
+NO NEED -it 
+When your prof expects -it
+
+Your earlier labs correctly used:
+docker run -it lam/node
+docker run -it lam/node /bin/bash
+
+Because:
+You were exploring the filesystem
+Installing packages
+Using editors
+Different intent -> different flags.
+
+
+-> Uses image-installed node_modules
+-> Clean, deterministic
+-> Best for exams
+
+
+
+
+What you just fixed (important)
+
+-> Editing inside containers
+-> Reinstalling tools every run
+-> Treating docker like a VM
+
+Replaced with:
+-- Immutable images
+-- Host-owned source code
+-- Containers as execution units
+
+
+
+This line is the culprit (by design):
+-v ${PWD}:/app
+
+
+What a bind mount actually does (non-negotiable rule)
+A volume mount replaces the container directory completely.
+
+
+
+This is the mental model your professor is testing
+Images are immutable. Volumes override them.
+If you mount over a directory, you lose what was inside it.
+You now understand why volumes are dangerous if misused.
+
+
+
+
+LINK: 		http://localhost:3002
+LINK: 		http://localhost:3002/welcome
+
+
+
+
+
+
+
+
+
+------------------------------------------------
+It was testing whether you understand three independent concepts:
+
+1)Ports
+EXPOSE = documentation
+-p host:container = actual networking
+
+2)Images vs Containers
+Build installs software
+Run executes immutable state
+
+3)Volumes override images
+Mount ≠ merge
+Mount = replace
+You’ve demonstrated all three.
+
+
+Key lesson:
+If I mount a volume over /app, I hide node_modules installed in the image.
+That causes "Cannot find module" errors.
+Fix:
+Either don't mount, or ensure dependencies exist on the host.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ATLTERNATE WAY AS WELL 
+cat .\Dockerfile
+FROM node:latest
+
+# Create app directory inside container
+WORKDIR /app
+
+# Copy dependency definitions first
+COPY package*.json ./
+
+# Install dependencies inside the image
+RUN npm install
+
+# Copy application code
+COPY server.js .
+
+# Document container port
+EXPOSE 3002
+
+# Start with shell (lecture choice)
+# CMD ["node", "server.js"]
+CMD ["/bin/bash"]
+
+______________________________________
+
+> docker build -t lam/ports-demo .
+______________________________________
+
+
+
+______________________________________
+
+> docker run -p 3002:3002 --rm -it lam/ports-demo
+______________________________________
+
+
+root@156b767ad1fc:/app# node server.js
+Running on http://0.0.0.0:3002
+/
+^C
+root@156b767ad1fc:/app# exit
+exit
+
+
+LINK: 		http://localhost:3002
+LINK: 		http://localhost:3002/welcome
+
+
+------------------------------------------------------------------------------------------------
+
+CMD ["node", "server.js"]
+CMD ["/bin/bash"]
+That single line flipped who is responsible for starting the server.
+
+Think of CMD as:
+“When this container starts, what is its job?”
+
+
+Case 1 — CMD ["node", "server.js"]
+
+docker run -p 3002:3002 lam/ports-demo
+
+Docker internally executes:
+node server.js
+
+Consequences
+
+Server starts automatically
+
+Container stays alive because the Node process is running
+
+You do not need -it
+You do not need to type anything
+
+This is:
+
+Production-style
+ “One process per container”
+
+ Not interactive
+That’s why earlier it worked without -it
+
+
+
+
+
+Case 2 — CMD ["/bin/bash"] (interactive mode)
+
+Now the container’s job is:
+“Start a shell. Nothing else.”
+
+
+
+Why -it suddenly became mandatory
+
+When you switched to:
+
+docker run -p 3002:3002 --rm -it lam/ports-demo
+
+
+You told Docker:
+
+-i → keep STDIN open
+-t → allocate a terminal
+Now Bash could stay alive.
+
+Inside the container, you manually started the job:
+node server.js
+
+
+
+Result
+
+Container lives
+Server runs
+we see logs
+Browser works
+
+
+
+
+| Thing                  | Lives where  |
+| ------------ 	| ------------------ |
+| Source code      | Host (VS Code)     |
+| Dependencies	| Image (Dockerfile) |
+| Execution        | Container          |
+| OS tools     	| Base image         |
+
+
+
+
+
+
