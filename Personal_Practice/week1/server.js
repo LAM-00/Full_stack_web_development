@@ -58,6 +58,6 @@ app.get('/web', serveStaticFiles);
 // start server
 function startServer()
 {
-  console.log('Server listening on port 3002');
+  console.log('Server listening on port http://localhost:3002');
 }
 app.listen(3002, startServer);
