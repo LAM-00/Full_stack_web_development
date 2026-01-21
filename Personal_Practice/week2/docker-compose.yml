@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  web:
+    build: .
+    container_name: week2-node
+    ports:
+      - "3002:3002"
+  
+# NO NEED for volumes
+#    stdin_open: true    <--only for shells
+#    tty: true       <-- not for servers
+
+
