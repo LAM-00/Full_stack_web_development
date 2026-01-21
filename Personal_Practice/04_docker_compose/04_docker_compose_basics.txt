@@ -1,0 +1,417 @@
+04_docker_compose/
+├── Dockerfile
+├── docker-compose.yml
+├── server.js
+├── package.json
+
+
+
+
+
+
+Dockerfile
+## sequecing matters
+
+FROM node:latest
+## predictable filesystem
+WORKDIR /app
+
+
+# enables Docker layer caching
+COPY package*.json ./
+# installs Express once
+RUN npm install
+
+
+# app code
+COPY server.js .
+
+EXPOSE 3002
+
+# Compose-style interactive
+# CMD ["/bin/bash"]
+CMD ["node","server.js"]   <--- spacing matters
+
+
+
+
+
+
+
+docker-compose.yml
+version: "3.9"
+services:
+  web:
+    build: .
+    container_name: node1
+    ports:
+      - "3002:3002"
+    
+
+
+#    stdin_open: true    <--only for shells
+#    tty: true       <-- not for servers
+
+
+
+
+const express = require('express');
+this line requires
+If a module is required, it must be declared in package.json.
+
+
+
+No docker run. Ever.
+
+
+_________________________________________________________________________________________________
+
+docker compose build
+_________________________________________________________________________________________________
+time="2026-01-14T22:17:17-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Building 8.0s (12/12) FINISHED
+ => [internal] load local bake definitions                                                                                                           0.0s
+ => => reading from stdin 650B                                                                                                                       0.0s
+ => [internal] load build definition from Dockerfile                                                                                                 0.1s
+ => => transferring dockerfile: 417B                                                                                                                 0.0s
+ => [internal] load metadata for docker.io/library/node:latest                                                                                       0.1s
+ => [internal] load .dockerignore                                                                                                                    0.0s
+ => => transferring context: 2B                                                                                                                      0.0s
+ => [1/5] FROM docker.io/library/node:latest@sha256:6d362f0df70431417ef79c30e47c0515ea9066d8be8011e859c6c3575514a027                                 0.1s
+ => => resolve docker.io/library/node:latest@sha256:6d362f0df70431417ef79c30e47c0515ea9066d8be8011e859c6c3575514a027                                 0.1s
+ => [internal] load build context                                                                                                                    0.1s
+ => => transferring context: 826B                                                                                                                    0.0s
+ => CACHED [2/5] WORKDIR /app                                                                                                                        0.0s
+ => [3/5] COPY package*.json ./                                                                                                                      0.1s
+ => [4/5] RUN npm install                                                                                                                            5.1s
+ => [5/5] COPY server.js .                                                                                                                           0.1s
+ => exporting to image                                                                                                                               1.9s
+ => => exporting layers                                                                                                                              0.8s
+ => => exporting manifest sha256:239b917c45e01895a3c957a73c680472083bda88ae0d85f914b4cb875feb9aa3                                                    0.0s
+ => => exporting config sha256:0c5bf5dacd3e9610cce8404e4a68a704d3f439f61c7f0f52ece73e7ba9fd05c8                                                      0.0s
+ => => exporting attestation manifest sha256:7120b0f2fd3248aaad19d974053ff37afe14c817fc4895a3d036211b6c9a7581                                        0.0s
+ => => exporting manifest list sha256:244c272df2379d39adfe17d8d0d759c2690866ed85c23e45b5f0a38ee0a6cb0a                                               0.0s
+ => => naming to docker.io/library/04_docker_compose-web:latest                                                                                      0.0s
+ => => unpacking to docker.io/library/04_docker_compose-web:latest                                                                                   0.8s
+ => resolving provenance for metadata file                                                                                                           0.0s
+[+] Building 1/1
+ ✔ 04_docker_compose-web  Built                                                       
+
+
+Build an image from Dockerfile
+Install Express via npm install
+Produce a reusable image for Compose
+
+_________________________________________________________________________________________________
+
+docker compose up 
+_________________________________________________________________________________________________
+time="2026-01-14T22:21:08-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 2/2
+ ✔ Network 04_docker_compose_default  Created                                                                                                        0.1s
+ ✔ Container node1                    Created                                                                                                        0.1s
+Attaching to node1
+
+
+
+
+
+
+Network creation
+Container start
+Port 3002 exposed
+Attach to logs interactively
+
+
+
+
+
+
+
+
+________________________________________________________________________________________________
+
+docker compose up -d
+_________________________________________________________________________________________________
+time="2026-01-14T22:22:03-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 1/1
+ ✔ Container node1  Started                                                                                                                          0.3s
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker compose attach node1
+time="2026-01-14T22:23:45-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+service "node1" is not running
+
+
+
+
+Start container in background
+Free terminal
+
+
+
+
+
+
+
+
+
+
+
+________________________________________________________________________________________________
+
+docker compose attach node1
+_________________________________________________________________________________________________
+Attach to a running container
+See shell prompt
+
+
+
+
+
+
+_________________________________________________________________________________________________
+
+docker compose down
+_________________________________________________________________________________________________
+
+Stop containers
+Remove network
+Clean slate
+
+time="2026-01-14T22:24:03-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 2/2
+ ✔ Container node1                    Removed                                                                                                        1.2s
+ ✔ Network 04_docker_compose_default  Removed                                                                                                        0.3s
+
+
+
+
+Option A — Interactive (learning mode)
+
+CMD ["/bin/bash"]
+
+docker compose up
+docker compose attach web
+node server.js
+
+
+Option B — Production-style (exam-preferred)
+CMD ["node", "server.js"]
+docker compose up -d
+
+LINK: http://localhost:3002
+
+NO attach needed
+No attach.
+No -it.
+No manual node server.js.
+
+docker compose down
+docker compose build
+docker compose up 
+
+
+LINK:    http://localhost:3002
+LINK:    http://localhost:3002/welcome
+
+
+
+
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> cat .\Dockerfile
+## sequecing matters
+
+FROM node:latest
+## predictable filesystem
+WORKDIR /app
+
+
+# enables Docker layer caching
+COPY package*.json ./
+# installs Express once
+RUN npm install
+
+
+# app code
+COPY server.js .
+
+EXPOSE 3002
+
+# Compose-style interactive
+# CMD ["/bin/bash"]
+CMD ["node","server.js"]
+
+
+
+
+
+
+
+
+
+
+
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker ps -a
+CONTAINER ID   IMAGE                   COMMAND                  CREATED         STATUS                     PORTS                                         NAMES
+f251fa95a72c   04_docker_compose-web   "docker-entrypoint.s…"   9 minutes ago   Created                                                                  node1
+efb4d0ca9994   lam/ports-demo          "docker-entrypoint.s…"   2 hours ago     Up 2 hours                 0.0.0.0:3002->3002/tcp, [::]:3002->3002/tcp   sad_saha
+c5226688e9e3   534ca054beaf            "docker-entrypoint.s…"   9 hours ago     Exited (255) 2 hours ago   3002/tcp                                      vigilant_chandrasekhar
+1bf39860a64d   lam/node                "docker-entrypoint.s…"   5 days ago      Exited (0) 5 days ago                                                    jovial_moser
+90e9ee729f0e   lam/node                "docker-entrypoint.s…"   5 days ago      Exited (0) 5 days ago                                                    nostalgic_visvesvaraya
+b155c76ce48e   lam/node                "docker-entrypoint.s…"   5 days ago      Exited (0) 5 days ago                                                    hardcore_curran
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker stop efb4d0ca9994
+efb4d0ca9994
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker ps -a
+CONTAINER ID   IMAGE                   COMMAND                  CREATED         STATUS                     PORTS      NAMES
+f251fa95a72c   04_docker_compose-web   "docker-entrypoint.s…"   9 minutes ago   Created                               node1
+c5226688e9e3   534ca054beaf            "docker-entrypoint.s…"   9 hours ago     Exited (255) 2 hours ago   3002/tcp   vigilant_chandrasekhar
+1bf39860a64d   lam/node                "docker-entrypoint.s…"   5 days ago      Exited (0) 5 days ago                 jovial_moser
+90e9ee729f0e   lam/node                "docker-entrypoint.s…"   5 days ago      Exited (0) 5 days ago                 nostalgic_visvesvaraya
+b155c76ce48e   lam/node                "docker-entrypoint.s…"   5 days ago      Exited (0) 5 days ago                 hardcore_curran
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> cat .\docker-compose.yml
+version: "3.9"
+services:
+  web:
+    build: .
+    container_name: node1
+    ports:
+      - "3002:3002"
+
+
+#    volumes:
+#      - .:/app
+#    stdin_open: true    <--only for shells
+#    tty: true       <-- not for servers
+
+
+
+
+
+
+
+
+
+
+## 1st docker-compose.yml from the lecture slides
+## from lecture 01 pg:27
+
+#services:
+#node1:
+#  build: .
+#  container_name: node1
+#  ports:
+#    - "80:8080"
+#  volumes:
+#    - /Users/ralph/classes/353/w1:/usr/src/app/
+#  stdin_open: true
+#  tty: true
+
+
+## 2nd docker-compose.yml from lecture slides
+## from lecture 01 pg: 43    [for python]
+
+#version: "3.9"
+#services:
+# python1:
+#  build: .
+#  container_name: p1
+#  command: flask run --host=0.0.0.0
+#  ports:
+#   - "80:5000"
+#  volumes:
+#   - /Users/ralph/classes/436/test/python:/usr/src/app
+#  environment:
+#   - FLASK_APP=hello
+#   - FLASK_ENV=production
+
+
+## 3rd docker-compose.yml from lecture slides
+## from lecture 02 pg: 03    [for python]
+
+
+#services:
+# node1:
+#  build: .
+#  container_name: n1
+#  ports:
+#   - "80:8080"
+#  volumes:
+#   - /Users/ralph/classes/353/w1:/usr/src/app/
+# stdin_open: true
+# tty: true
+
+
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker compose down
+time="2026-01-14T23:01:02-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 2/2
+ ✔ Container node1                    Removed                                                                                                        0.0s
+ ✔ Network 04_docker_compose_default  Removed                                                                                                        0.3s
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker compose build
+time="2026-01-14T23:01:17-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Building 1.1s (12/12) FINISHED
+ => [internal] load local bake definitions                                                                                                           0.0s
+ => => reading from stdin 650B                                                                                                                       0.0s
+ => [internal] load build definition from Dockerfile                                                                                                 0.0s
+ => => transferring dockerfile: 372B                                                                                                                 0.0s
+ => [internal] load metadata for docker.io/library/node:latest                                                                                       0.1s
+ => [internal] load .dockerignore                                                                                                                    0.0s
+ => => transferring context: 2B                                                                                                                      0.0s
+ => [1/5] FROM docker.io/library/node:latest@sha256:6d362f0df70431417ef79c30e47c0515ea9066d8be8011e859c6c3575514a027                                 0.0s
+ => => resolve docker.io/library/node:latest@sha256:6d362f0df70431417ef79c30e47c0515ea9066d8be8011e859c6c3575514a027                                 0.0s
+ => [internal] load build context                                                                                                                    0.0s
+ => => transferring context: 63B                                                                                                                     0.0s
+ => CACHED [2/5] WORKDIR /app                                                                                                                        0.0s
+ => CACHED [3/5] COPY package*.json ./                                                                                                               0.0s
+ => CACHED [4/5] RUN npm install                                                                                                                     0.0s
+ => CACHED [5/5] COPY server.js .                                                                                                                    0.0s
+ => exporting to image                                                                                                                               0.3s
+ => => exporting layers                                                                                                                              0.0s
+ => => exporting manifest sha256:ee7482acc1425a431e81fe518b3c52702825dd7a9f022804a8c4eddb3f5e609d                                                    0.0s
+ => => exporting config sha256:a6ab853e9c8f5ee0a0d042f59bdb237509305ae2f56f6c9cb9a5b85897af4cb5                                                      0.0s
+ => => exporting attestation manifest sha256:5ac7bb89d38c4cf6adfde70940566614c4040f647b3d2d95f435031b59186c03                                        0.0s
+ => => exporting manifest list sha256:ef73ddd265581b22d3f55824344a6bc27eac76de1c50827485fd71ce3ba5abb1                                               0.0s
+ => => naming to docker.io/library/04_docker_compose-web:latest                                                                                      0.0s
+ => => unpacking to docker.io/library/04_docker_compose-web:latest                                                                                   0.0s
+ => resolving provenance for metadata file                                                                                                           0.0s
+[+] Building 1/1
+ ✔ 04_docker_compose-web  Built                                                                                                                      0.0s
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker compose up
+time="2026-01-14T23:01:35-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 2/2
+ ✔ Network 04_docker_compose_default  Created                                                                                                        0.1s
+ ✔ Container node1                    Created                                                                                                        0.1s
+Attaching to node1
+node1  | Running on http://0.0.0.0:3002
+node1  | /
+Gracefully Stopping... press Ctrl+C again to force
+ Container node1  Stopping
+ Container node1  Stopped
+
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> ls
+v View in Docker Desktop   o View Config   w Enable Watch
+
+    Directory: D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         1/14/2026  11:00 PM           9125 04_docker_compose_basics.txt
+-a----         1/14/2026  10:54 PM           1185 docker-compose.yml
+-a----         1/14/2026  10:55 PM            333 Dockerfile
+-a----         1/14/2026   9:59 PM            140 package.json
+-a----         1/14/2026   9:52 PM            605 server.js
+
+
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker compose down
+time="2026-01-14T23:05:02-06:00" level=warning msg="D:\\My_Drive\\LAM\\UofS\\3RD_YEAR\\2WINTER-2026\\CMPT_353\\Docker\\Practice\\04_docker_compose\\docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+[+] Running 2/2
+ ✔ Container node1                    Removed                                                                                                        0.0s
+ ✔ Network 04_docker_compose_default  Removed                                                                                                        0.3s
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose> docker ps -a
+CONTAINER ID   IMAGE          COMMAND                  CREATED       STATUS                     PORTS      NAMES
+c5226688e9e3   534ca054beaf   "docker-entrypoint.s…"   9 hours ago   Exited (255) 2 hours ago   3002/tcp   vigilant_chandrasekhar
+1bf39860a64d   lam/node       "docker-entrypoint.s…"   5 days ago    Exited (0) 5 days ago                 jovial_moser
+90e9ee729f0e   lam/node       "docker-entrypoint.s…"   5 days ago    Exited (0) 5 days ago                 nostalgic_visvesvaraya
+b155c76ce48e   lam/node       "docker-entrypoint.s…"   5 days ago    Exited (0) 5 days ago                 hardcore_curran
+PS D:\My_Drive\LAM\UofS\3RD_YEAR\2WINTER-2026\CMPT_353\Docker\Practice\04_docker_compose>
+
+
+
