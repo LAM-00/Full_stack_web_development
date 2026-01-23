@@ -1,0 +1,133 @@
+
+<!--basic1.html-->
+<!-- 
+Static files can be opened directly in a browser:
+No server needed
+No Docker needed
+No Node.js  needed
+No backend needed
+
+
+
+
+
+Tags: The marker in angle brackets, like <p> or <a>.
+Elements: The whole thing: opening tag + content + closing tag. [Person]
+Attributes: An attribute is extra information about the element—like an adjective or a property. [name, age, address]
+    Global attributes (can be used on almost any tag) = id, class, style, title
+    Tag-specific attributes = href for <a>, src for <img>, charset for <meta>
+-->
+<!DOCTYPE html>  <!--tells teh browser "This is HTML5"-->
+<!-- My first HTML5 practice file -->
+<html> <!--Root of the document-->
+
+    <head> <!--metadata(title, charset)-->
+
+
+        <meta charset="uft-8"> <!-- use UFT-8 so all characters display correctly-->
+        <title><!--visible content we can see it in the browser tab-->
+            First Steps
+        </title>
+
+
+        <!-- Add a <style> block (internal CSS) -->
+        <style>
+            .p1 {
+                color:#e92f4b;
+                font-family: Arial;
+                font-size: 20pt;
+                
+            }
+            .highlight {
+                color:#c01e36;
+                font-size: 22pt;
+                background-color: rgba(230, 187, 191, 0.862);
+            }
+            #p2 {
+                color: #ef8640;
+                font-family:'Times New Roman';
+
+            }
+            #p3 {
+                color: #4c5ed3;
+
+            }
+        </style>
+
+
+        <!-- Using Style from Separate File (external CSS) and linking it -->
+         <link rel="stylesheet" href="style.css">
+
+
+    </head>
+    <!------------------------------------------------------------------>
+    <body>
+
+        <!--inline style -->
+        <h1 style = "font-size: 20pt; color: #e1734e;">
+            My Basic HTML practice!! 
+        </h1>
+
+        <!--inline style -->
+        <h1 style="font-size: 22pt; color: #e77186">
+            This paragraph is styled by using inline CSS style...
+        </h1>
+
+        <!-- a paragraph element -->
+        <!-- Used <style> block (internal CSS) -->
+        <p class="p1 highlight">
+            This paragraph is styled by using internal CSS style block.
+        </p>
+        <p id="p2">
+            This is Lin Anour!! This paragraph also uses the CSS style block.
+        </p>
+        <!-- Used style.css separate file (external CSS) -->
+        <h2 class="big">
+            This paragraph is styled by using external CSS style file.
+        </h2>
+
+            
+
+        
+
+
+        <!--Creates 2 different buttons -->
+        <button onclick="changeText()">
+            Change Text!
+        </button>
+
+        <button id="b2">
+            Change Color!
+        </button>
+
+
+
+
+        <script type="text/javascript">
+            function changeText()
+            {
+                document.getElementById("p2").innerHTML="New Text";
+            }
+            function changeColor()
+            {
+                document.getElementById("p2").style.color="blue";
+            }
+            document.getElementById("b2").addEventListener("click", changeColor);
+
+        </script>
+
+        <br>
+        <!-- tag name and attribute -->
+        <!-- this tag is called anchor tag <a>-->
+        <!-- attribute is href="http://www.hypertextreference”.com" -->
+        <a href="https://docs.clouduxe.com/network-and-technology/http-versions?form=MG0AV3&utm_source=copilot.com"
+         style = "font-size: 18pt; color:#495de0 ;">
+            LINKING
+        </a>
+
+    </body>
+</html>
+<!--
+<html> → the whole book
+<head> → the book’s cover info (title, author, ISBN)
+<body> → the actual pages we read-->
