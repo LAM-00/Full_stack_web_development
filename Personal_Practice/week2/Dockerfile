@@ -15,7 +15,7 @@ RUN npm install
 # app code
 COPY server.js .
 
-EXPOSE 3002
+EXPOSE 3000
 
 # Compose-style interactive
 # CMD ["/bin/bash"]

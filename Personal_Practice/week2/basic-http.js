@@ -9,7 +9,7 @@ const http = require('http');
 const server = http.createServer((req, res) =>
     {
         res.writeHead(200, {'Content-Type': 'text/plain'});
-        res.end('Hello, world!!\n');
+        res.end('Hello, world from basic-http server !!\n');
     });
 
 
