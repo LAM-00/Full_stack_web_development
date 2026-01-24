@@ -1,9 +1,9 @@
 
 ## sequecing matters
 
-FROM node:latest
+FROM node:18
 ## predictable filesystem
-WORKDIR /app
+WORKDIR /usr/src/app
 
 
 # enables Docker layer caching
@@ -13,10 +13,10 @@ RUN npm install
 
 
 # app code
-COPY server.js .
+COPY . .
 
 EXPOSE 3000
 
 # Compose-style interactive
 # CMD ["/bin/bash"]
-CMD ["node","server.js"]
+ CMD ["node","server.js"]

@@ -5,6 +5,9 @@ services:
     container_name: week2-node
     ports:
       - "3000:3000"
+    volumes:
+      - ./:/usr/src/app
+    command: node server.js
   
 # NO NEED for volumes
 #    stdin_open: true    <--only for shells
