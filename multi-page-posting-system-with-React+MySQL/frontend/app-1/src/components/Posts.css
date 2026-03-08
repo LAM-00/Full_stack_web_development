@@ -1,0 +1,97 @@
+/* Styles for the posts panel and scrollable list. */
+.posts {
+  background: linear-gradient(135deg, #fef6e4, #f7e0c5 45%, #f8d7c0);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow: 0 24px 60px rgba(70, 40, 20, 0.18);
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Header layout with title + count badge. */
+.posts__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+/* Small uppercase label above the heading. */
+.posts__kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.75rem;
+  margin: 0 0 0.4rem;
+  color: #6b3f2f;
+  font-weight: 600;
+}
+
+/* Section title inside the posts panel. */
+.posts h1 {
+  font-size: 2.4rem;
+  margin: 0;
+  color: #2a1a14;
+}
+
+/* Pill showing total post count. */
+.posts__count {
+  background: #2a1a14;
+  color: #fef6e4;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Empty/loading/error message styling. */
+.posts__state {
+  margin: 0;
+  font-size: 1rem;
+  color: #5c3a2d;
+}
+
+/* Error state with higher contrast. */
+.posts__state--error {
+  color: #b42318;
+  background: rgba(244, 204, 204, 0.6);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+}
+
+/* Scrollable list container for post cards. */
+.posts__list {
+  display: grid;
+  gap: 1rem;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+/* Scrollbar styling for WebKit browsers. */
+.posts__list::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Scrollbar thumb styling. */
+.posts__list::-webkit-scrollbar-thumb {
+  background: rgba(42, 26, 20, 0.3);
+  border-radius: 999px;
+}
+
+/* Scrollbar track styling. */
+.posts__list::-webkit-scrollbar-track {
+  background: rgba(42, 26, 20, 0.08);
+  border-radius: 999px;
+}
+
+/* Responsive adjustments for smaller viewports. */
+@media (max-width: 720px) {
+  .posts {
+    padding: 2rem 1.5rem;
+  }
+
+  .posts__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
