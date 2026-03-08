@@ -1,0 +1,29 @@
+/* Styles for a single post card. */
+.post {
+  background: rgba(255, 255, 255, 0.86);
+  border-radius: 18px;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(42, 26, 20, 0.08);
+  box-shadow: 0 10px 25px rgba(60, 30, 10, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Subtle lift on hover for visual feedback. */
+.post:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 30px rgba(60, 30, 10, 0.12);
+}
+
+/* Main body text of the post. */
+.post__text {
+  margin: 0 0 0.7rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2a1a14;
+}
+
+/* Timestamp styling. */
+.post__meta {
+  font-size: 0.9rem;
+  color: #6b3f2f;
+}

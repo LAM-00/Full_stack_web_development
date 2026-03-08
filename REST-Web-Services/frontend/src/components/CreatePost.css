@@ -1,0 +1,86 @@
+/* Form container for composing a new post. */
+.create-post {
+  background: #2a1a14;
+  color: #fef6e4;
+  padding: 2rem;
+  border-radius: 20px;
+  display: grid;
+  gap: 1rem;
+  box-shadow: 0 18px 40px rgba(20, 10, 5, 0.25);
+}
+
+/* Title + hint row. */
+.create-post__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Section heading inside the form. */
+.create-post h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+/* Subtle hint text styling. */
+.create-post__hint {
+  font-size: 0.85rem;
+  color: rgba(254, 246, 228, 0.7);
+}
+
+/* Main text input area. */
+.create-post__input {
+  width: 100%;
+  border-radius: 14px;
+  border: none;
+  padding: 1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  resize: vertical;
+  color: #2a1a14;
+}
+
+/* Focus ring to improve keyboard visibility. */
+.create-post__input:focus {
+  outline: 2px solid #f7e0c5;
+}
+
+/* Row that holds error message and submit button. */
+.create-post__actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+/* Inline error message styling. */
+.create-post__error {
+  font-size: 0.9rem;
+  color: #ffd6d6;
+}
+
+/* Submit button base styling. */
+.create-post button {
+  background: #fef6e4;
+  color: #2a1a14;
+  border: none;
+  padding: 0.6rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Disabled state styling for the submit button. */
+.create-post button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Stack the header on smaller screens. */
+@media (max-width: 720px) {
+  .create-post__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

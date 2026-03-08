@@ -1,0 +1,159 @@
+/* App layout container and responsive 2-column grid. */
+.app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3.5rem 1.5rem;
+}
+
+/* Constrains the content width and sets a two-column layout:
+   - left column: posts list
+   - right column: create-post form
+*/
+.app__content {
+  width: min(900px, 100%);
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  align-items: start;
+}
+
+/* Wider layout for the posts page. */
+.app__content--wide {
+  width: min(1400px, 100%);
+}
+
+/* Stack items vertically (back button on top, content below). */
+.app__content--stack {
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+/* Narrower layout for single-column pages like create. */
+.app__content--narrow {
+  grid-template-columns: 1fr;
+}
+
+/* Wraps the alert and the create-post form together. */
+.app__form {
+  display: grid;
+  gap: 0.75rem;
+}
+
+/* Small, inline alert for success/failure messages. */
+.app__alert {
+  background: rgba(254, 246, 228, 0.9);
+  border: 1px solid rgba(42, 26, 20, 0.2);
+  color: #2a1a14;
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
+}
+
+/* Landing page card tweaks. */
+.app__landing {
+  padding: 2.5rem;
+  border-radius: 28px;
+  background: linear-gradient(135deg, #fff4e1, #f8dcc0 55%, #f6c9b0);
+  box-shadow: 0 25px 55px rgba(71, 34, 12, 0.2);
+  display: grid;
+  gap: 1rem;
+}
+
+/* Supporting description under the landing title. */
+.app__tagline {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #5b3b2d;
+}
+
+/* Button group layout on the landing page. */
+.app__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* Shared button styling for landing actions. */
+.app__button {
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app__button:hover {
+  transform: translateY(-1px);
+}
+
+/* Primary action styling. */
+.app__button--primary {
+  background: #2a1a14;
+  color: #fff3df;
+  box-shadow: 0 12px 26px rgba(42, 26, 20, 0.25);
+}
+
+/* Secondary action styling. */
+.app__button--ghost {
+  background: rgba(42, 26, 20, 0.1);
+  color: #2a1a14;
+  border: 1px solid rgba(42, 26, 20, 0.2);
+}
+
+/* Back link styling for posts/create pages. */
+.app__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #2a1a14;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(42, 26, 20, 0.08);
+  border: 1px solid rgba(42, 26, 20, 0.15);
+  box-shadow: 0 6px 16px rgba(42, 26, 20, 0.12);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app__back:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(42, 26, 20, 0.18);
+  text-decoration: none;
+}
+
+/* Back + refresh row. */
+.app__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* Refresh button styling. */
+.app__refresh {
+  border: none;
+  background: linear-gradient(135deg, #2a1a14, #5c3a2d);
+  color: #fff3df;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(42, 26, 20, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app__refresh:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 20px rgba(42, 26, 20, 0.18);
+}
+
+/* Collapse to a single column for narrow screens. */
+@media (max-width: 900px) {
+  .app__content {
+    grid-template-columns: 1fr;
+  }
+}
