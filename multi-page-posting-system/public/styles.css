@@ -1,0 +1,88 @@
+/* ------------------------------
+   Global Page Styling
+--------------------------------*/
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 40px auto;
+    max-width: 700px;
+    line-height: 1.6;
+    padding: 0 20px;
+    background-color: #e8aeae;
+    color: #333;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ------------------------------
+   Navigation Buttons
+--------------------------------*/
+nav {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 18px;
+    margin: 5px;
+    background-color:rgba(0, 0, 0, 0.6); /* transparent black */
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.btn:hover {
+    background-color: rgba(0, 0, 0, 0.8); /* darker on hover */
+}
+
+
+/* ------------------------------
+   Form Styling
+--------------------------------*/
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+input[type="text"],
+textarea {
+    padding: 10px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+button.btn {
+    cursor: pointer;
+    border: none;
+}
+
+/* ------------------------------
+   Posts Display
+--------------------------------*/
+.post {
+    background-color: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.post h3 {
+    margin-top: 0;
+}
+
+.post small {
+    color: #666;
+}

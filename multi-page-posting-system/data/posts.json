@@ -1,0 +1,32 @@
+[
+  {
+    "topic": "1_Post",
+    "data": "Hello, There, this is to check if the server works!",
+    "timestamp": "2026-02-03T23:55:26.396Z"
+  },
+  {
+    "topic": "2_Post",
+    "data": "This post is for second checking to see the posts.",
+    "timestamp": "2026-02-03T23:56:06.919Z"
+  },
+  {
+    "topic": "3_Post",
+    "data": "My third post !",
+    "timestamp": "2026-02-03T23:56:22.432Z"
+  },
+  {
+    "topic": "4_post",
+    "data": "This is my last post",
+    "timestamp": "2026-02-03T23:56:48.913Z"
+  },
+  {
+    "topic": "asd",
+    "data": "da",
+    "timestamp": "2026-02-04T00:03:05.310Z"
+  },
+  {
+    "topic": "Test",
+    "data": "Hello",
+    "timestamp": "2026-02-06T04:02:08.895Z"
+  }
+]

@@ -1,0 +1,75 @@
+<!--newpost.html-->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Post</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <h1>Create a New Post</h1>
+
+    <nav>
+        <a href="index.html" class="btn">Home</a>
+        <a href="posts.html" class="btn">View All Posts</a>
+    </nav>
+
+    <form id="post-form">
+        <label>Topic:</label>
+        <input type="text" id="topic" required>
+
+        <label>Message:</label>
+        <textarea id="data" required></textarea>
+
+        <button type="submit" class="btn">Submit Post</button>
+    </form>
+
+    <p id="status"></p>
+
+    <script>
+        const form = document.getElementById("post-form");
+        const status = document.getElementById("status");
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const topic = document.getElementById("topic").value.trim();
+            const data = document.getElementById("data").value.trim();
+
+            if (!topic || !data) {
+                status.textContent = "Both fields are required.";
+                status.style.color = "red";
+                return;
+            }
+
+            try {
+                const response = await fetch("/api/posts", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ topic, data })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    status.textContent = "Post created!";
+                    status.style.color = "green";
+
+                    // Clear the form
+                    form.reset();
+                } else {
+                    status.textContent = result.error || "Error creating post.";
+                    status.style.color = "red";
+                }
+
+            } catch (err) {
+                status.textContent = "Network error.";
+                status.style.color = "red";
+            }
+        });
+    </script>
+
+</body>
+</html>
