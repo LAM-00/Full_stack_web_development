@@ -1,0 +1,29 @@
+For Assignment-2
+----------------
+
+
+
+> npm init -y
+
+> npm install express
+
+> docker compose build
+
+> docker compose up 
+      http://localhost:3000/posting.html
+
+> docker compose down
+
+> docker ps -a
+
+
+
+
+Saving space:
+------------
+
+> docker compose down
+
+> docker image prune -a
+
+> docker system prune -a

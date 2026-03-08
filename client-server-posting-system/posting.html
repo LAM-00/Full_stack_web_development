@@ -1,0 +1,67 @@
+<!--Posting.html-->
+
+<!Doctype html>
+<html>
+    <head>
+        <title>
+            Posting System
+        </title>
+    </head>
+
+    <body>
+        <h1>
+            Posting System
+        </h1>
+        <h2>
+            Create a New Post
+        </h2>
+        <input id="topic" placeholder="Topic">
+        <br>
+        <br>
+        <textarea id="data" placeholder="Write your Post ...">
+        </textarea>
+        <br>
+        <br>
+        <button onclick="sendPost()">
+            Submit
+        </button>
+
+        <h2>
+            All Posts
+        </h2>
+        <div id="postList">
+        </div>
+
+        <script>
+            async function loadPosts()
+            {
+                const res = await fetch("/posts");
+                const posts = await res.json();
+
+                const container = document.getElementById("postList");
+                container.innerHTML = "";
+
+                posts.forEach(p => 
+                {
+                    const div = document.createElement("div");
+                    div.innerHTML = `<strong>${p.topic}</strong><br>${p.data}<br><em>${p.timestamp}</em><br><hr>`;
+                    container.appendChild(div); 
+                });
+            } 
+            async function sendPost()
+            {
+                const topic = document.getElementById("topic").value;
+                const data = document.getElementById("data").value;
+                await fetch("/postmessage", 
+                { 
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" }, 
+                    body: JSON.stringify({ topic, data })
+                });
+
+                loadPosts(); // refresh without page reload 
+            }
+            loadPosts(); // initial load
+        </script>
+    </body>
+</html>
